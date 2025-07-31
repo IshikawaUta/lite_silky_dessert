@@ -7,53 +7,45 @@ from flask_mail import Mail, Message
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
 from dotenv import load_dotenv
 
-load_dotenv() # Load environment variables from .env
+load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
 
-# MongoDB Connection
 try:
     client = MongoClient(app.config['MONGO_URI'])
-    db = client.dessert_ecommerce # Ganti dengan nama database Anda
-    # Test connection
+    db = client.dessert_ecommerce
     client.admin.command('ping')
-    print("MongoDB connection successful!")
 except Exception as e:
-    print(f"Error connecting to MongoDB: {e}")
-    # Consider more robust error handling for production
+    pass
 
-# Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'admin_login' # Redirect to admin login if not logged in
+login_manager.login_view = 'admin_login'
 login_manager.login_message_category = 'warning'
 bcrypt = Bcrypt(app)
 
 mail = Mail(app)
 
-# Cloudinary Configuration
 cloudinary.config(
     cloud_name=app.config['CLOUDINARY_CLOUD_NAME'],
     api_key=app.config['CLOUDINARY_API_KEY'],
     api_secret=app.config['CLOUDINARY_API_SECRET']
 )
 
-# User Model for Flask-Login
 class User(UserMixin):
     def __init__(self, user_data):
         self.user_data = user_data
         self.id = str(user_data['_id'])
         self.username = user_data['username']
-        self.password = user_data['password'] # Hashed password
+        self.password = user_data['password']
 
     @staticmethod
     def get(user_id):
-        # Ensure user_id is a valid ObjectId string
         if not ObjectId.is_valid(user_id):
             return None
         user = db.users.find_one({'_id': ObjectId(user_id)})
@@ -65,33 +57,10 @@ class User(UserMixin):
 def load_user(user_id):
     return User.get(user_id)
 
-# --- Initial Admin User Creation (Run this once or during deployment setup) ---
-# To create the initial admin user, uncomment the `create_admin_user` route below,
-# run the app, navigate to `/admin/setup_initial_admin` once, then comment it back.
-# This prevents accidental creation of multiple admin users.
-
-@app.route('/admin/setup_initial_admin')
-def setup_initial_admin():
-    if db.users.count_documents({}) == 0:
-        hashed_password = bcrypt.generate_password_hash("litedessert2025").decode('utf-8')
-        db.users.insert_one({'username': 'admin', 'password': hashed_password})
-        flash("Default admin user created: username='admin', password='litedessert2025'", 'success')
-    else:
-        flash("Admin user already exists.", 'info')
-    return redirect(url_for('admin_login'))
-
-# --- Context Processor for Base Templates ---
-@app.context_processor
-def inject_now():
-    return {'datetime': datetime}
-
-# --- PUBLIC ROUTES ---
-
-# Home Page
 @app.route('/')
 def index():
-    products = list(db.products.find().limit(4)) # Get 4 latest products
-    blog_posts = list(db.blog_posts.find().sort('date_posted', -1).limit(3)) # Get 3 latest blog posts
+    products = list(db.products.find().limit(4))
+    blog_posts = list(db.blog_posts.find().sort('date_posted', -1).limit(3))
     return render_template('index.html', products=products, blog_posts=blog_posts)
 
 @app.route('/search')
@@ -101,29 +70,25 @@ def search():
     blog_results = []
 
     if query:
-        # Search in products collection
         product_results = list(db.products.find(
             {'$text': {'$search': query}},
-            {'score': {'$meta': 'textScore'}} # Dapatkan skor relevansi
-        ).sort([('score', {'$meta': 'textScore'})])) # Urutkan berdasarkan relevansi
+            {'score': {'$meta': 'textScore'}}
+        ).sort([('score', {'$meta': 'textScore'})]))
 
-        # Search in blog_posts collection
         blog_results = list(db.blog_posts.find(
             {'$text': {'$search': query}},
-            {'score': {'$meta': 'textScore'}} # Dapatkan skor relevansi
-        ).sort([('score', {'$meta': 'textScore'})])) # Urutkan berdasarkan relevansi
+            {'score': {'$meta': 'textScore'}}
+        ).sort([('score', {'$meta': 'textScore'})]))
 
     return render_template('search_results.html',
                            query=query,
                            product_results=product_results,
                            blog_results=blog_results)
 
-# About Us Page
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-# Contact Page
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -131,7 +96,6 @@ def contact():
         email = request.form['email']
         message_text = request.form['message']
 
-        # --- LOGIKA PENGIRIMAN EMAIL DENGAN FLASK-MAIL ---
         try:
             msg = Message("Pesan Baru dari Formulir Kontak Lite Dessert",
                           sender=app.config['MAIL_DEFAULT_SENDER'],
@@ -145,22 +109,15 @@ Pesan:
             mail.send(msg)
             flash('Pesan Anda telah terkirim! Kami akan segera menghubungi Anda.', 'success')
         except Exception as e:
-            flash(f'Gagal mengirim pesan. Silakan coba lagi nanti. Error: {e}', 'danger')
-            print(f"ERROR: Gagal mengirim email: {e}") # Log error untuk debugging
-            # Optional: Log the full traceback for more detail
-            # import traceback
-            # print(traceback.format_exc())
-
+            flash(f'Gagal mengirim pesan. Silakan coba lagi nanti.', 'danger')
         return redirect(url_for('contact'))
     return render_template('contact.html')
 
-# Products Page
 @app.route('/products')
 def products():
     all_products = list(db.products.find())
     return render_template('products.html', products=all_products)
 
-# Product Detail Page
 @app.route('/product/<id>')
 def product_detail(id):
     if not ObjectId.is_valid(id):
@@ -207,13 +164,11 @@ def add_review(id):
         flash('Ulasan Anda berhasil ditambahkan!', 'success')
         return redirect(url_for('product_detail', id=id))
 
-# Blog Page
 @app.route('/blog')
 def blog():
     posts = list(db.blog_posts.find().sort('date_posted', -1))
     return render_template('blog.html', posts=posts)
 
-# Blog Post Detail Page
 @app.route('/blog/<id>')
 def blog_post(id):
     if not ObjectId.is_valid(id):
@@ -225,14 +180,10 @@ def blog_post(id):
     flash('Postingan blog tidak ditemukan.', 'danger')
     return redirect(url_for('blog'))
 
-# Cart Page
 @app.route('/cart')
 def cart():
     return render_template('cart.html')
 
-# --- ADMIN ROUTES ---
-
-# Admin Login
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if current_user.is_authenticated:
@@ -252,7 +203,6 @@ def admin_login():
             flash('Login gagal. Periksa username dan password Anda.', 'danger')
     return render_template('admin/login.html')
 
-# Admin Logout
 @app.route('/admin/logout')
 @login_required
 def admin_logout():
@@ -260,18 +210,15 @@ def admin_logout():
     flash('Anda telah logout.', 'info')
     return redirect(url_for('admin_login'))
 
-# Admin Dashboard
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
     total_products = db.products.count_documents({})
     total_blog_posts = db.blog_posts.count_documents({})
-    # You might add more stats here, e.g., latest orders if you implement an order system
     return render_template('admin/admin_dashboard.html',
                            total_products=total_products,
                            total_blog_posts=total_blog_posts)
 
-# --- Product Management ---
 @app.route('/admin/products')
 @login_required
 def manage_products():
@@ -286,7 +233,7 @@ def add_product():
         description = request.form['description']
         price = float(request.form['price'])
         category = request.form['category']
-        image_file = request.files.get('image') # Use .get() for safety
+        image_file = request.files.get('image')
 
         image_url = ''
         if image_file and image_file.filename != '':
@@ -294,7 +241,7 @@ def add_product():
                 upload_result = cloudinary.uploader.upload(image_file)
                 image_url = upload_result['secure_url']
             except Exception as e:
-                flash(f'Gagal mengunggah gambar ke Cloudinary: {e}', 'danger')
+                flash(f'Gagal mengunggah gambar ke Cloudinary.', 'danger')
                 return render_template('admin/add_product.html')
 
         db.products.insert_one({
@@ -327,17 +274,16 @@ def edit_product(id):
         category = request.form['category']
         image_file = request.files.get('image')
 
-        image_url = product.get('image_url', '') # Keep existing image if no new one uploaded
+        image_url = product.get('image_url', '')
         if image_file and image_file.filename != '':
             try:
-                # Delete old image from Cloudinary (optional but recommended)
                 if image_url:
                     public_id = image_url.split('/')[-1].split('.')[0]
                     cloudinary.uploader.destroy(public_id)
                 upload_result = cloudinary.uploader.upload(image_file)
                 image_url = upload_result['secure_url']
             except Exception as e:
-                flash(f'Gagal mengunggah gambar ke Cloudinary: {e}', 'danger')
+                flash(f'Gagal mengunggah gambar ke Cloudinary.', 'danger')
                 return render_template('admin/edit_product.html', product=product)
 
         db.products.update_one(
@@ -368,14 +314,13 @@ def delete_product(id):
                 public_id = product['image_url'].split('/')[-1].split('.')[0]
                 cloudinary.uploader.destroy(public_id)
             except Exception as e:
-                print(f"Error deleting image from Cloudinary: {e}") # Log error, but proceed with DB delete
+                pass
         db.products.delete_one({'_id': ObjectId(id)})
         flash('Produk berhasil dihapus!', 'success')
     else:
         flash('Produk tidak ditemukan.', 'danger')
     return redirect(url_for('manage_products'))
 
-# --- Blog Management ---
 @app.route('/admin/blog')
 @login_required
 def manage_blog():
@@ -388,7 +333,7 @@ def add_blog_post():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        author = request.form.get('author', current_user.username) # Default to logged-in user
+        author = request.form.get('author', current_user.username)
         image_file = request.files.get('image')
 
         image_url = ''
@@ -397,7 +342,7 @@ def add_blog_post():
                 upload_result = cloudinary.uploader.upload(image_file)
                 image_url = upload_result['secure_url']
             except Exception as e:
-                flash(f'Gagal mengunggah gambar ke Cloudinary: {e}', 'danger')
+                flash(f'Gagal mengunggah gambar ke Cloudinary.', 'danger')
                 return render_template('admin/add_blog_post.html')
 
         db.blog_posts.insert_one({
@@ -436,7 +381,7 @@ def edit_blog_post(id):
                 upload_result = cloudinary.uploader.upload(image_file)
                 image_url = upload_result['secure_url']
             except Exception as e:
-                flash(f'Gagal mengunggah gambar ke Cloudinary: {e}', 'danger')
+                flash(f'Gagal mengunggah gambar ke Cloudinary.', 'danger')
                 return render_template('admin/edit_blog_post.html', post=post)
 
         db.blog_posts.update_one(
@@ -465,7 +410,7 @@ def delete_blog_post(id):
                 public_id = post['image_url'].split('/')[-1].split('.')[0]
                 cloudinary.uploader.destroy(public_id)
             except Exception as e:
-                print(f"Error deleting image from Cloudinary: {e}")
+                pass
         db.blog_posts.delete_one({'_id': ObjectId(id)})
         flash('Postingan blog berhasil dihapus!', 'success')
     else:
@@ -474,10 +419,8 @@ def delete_blog_post(id):
 
 @app.route('/sitemap.xml')
 def sitemap():
-    # Buat daftar URL statis dan dinamis
     urls = []
     
-    # URL statis
     static_urls = ['index', 'products', 'blog', 'about', 'contact', 'admin_login']
     for url in static_urls:
         urls.append({
@@ -487,7 +430,6 @@ def sitemap():
             'priority': '1.0' if url == 'index' else '0.8'
         })
     
-    # URL dinamis (Produk)
     products = list(db.products.find({}, {'_id': 1, 'last_updated': 1}))
     for product in products:
         lastmod = product.get('last_updated', datetime.now())
@@ -498,7 +440,6 @@ def sitemap():
             'priority': '0.7'
         })
 
-    # URL dinamis (Blog)
     blog_posts = list(db.blog_posts.find({}, {'_id': 1, 'date_posted': 1}))
     for post in blog_posts:
         lastmod = post.get('date_posted', datetime.now())
@@ -519,4 +460,4 @@ def robots_txt():
 
 
 if __name__ == '__main__':
-    app.run(debug=True) # Set debug=False in production
+    app.run(debug=False)
