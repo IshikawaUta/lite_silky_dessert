@@ -61,7 +61,7 @@ def load_user(user_id):
 def index():
     products = list(db.products.find().limit(4))
     blog_posts = list(db.blog_posts.find().sort('date_posted', -1).limit(3))
-    return render_template('index.html', products=products, blog_posts=blog_posts)
+    return render_template('index.html', products=products, blog_posts=blog_posts, datetime=datetime)
 
 @app.route('/search')
 def search():
