@@ -57,6 +57,10 @@ class User(UserMixin):
 def load_user(user_id):
     return User.get(user_id)
 
+@app.context_processor
+def inject_datetime():
+    return {'datetime': datetime}
+
 @app.route('/')
 def index():
     products = list(db.products.find().limit(4))
