@@ -1,0 +1,8 @@
+# static/robots.txt
+
+User-agent: *
+Allow: /
+Sitemap: https://localhost:5000/sitemap.xml
+
+User-agent: Googlebot
+Crawl-delay: 1

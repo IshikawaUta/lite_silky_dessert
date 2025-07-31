@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - Lite Silky Dessert{% endblock %}
+{% block meta_description %}{{ product.description | truncate(150) }}{% endblock %}
+
+{% block og_title %}{{ product.name }} | Lite Silky Dessert{% endblock %}
+{% block og_description %}{{ product.description | truncate(150) }}{% endblock %}
+{% block og_url %}{{ url_for('product_detail', id=product._id, _external=True) }}{% endblock %}
+{% block og_image %}{{ product.image_url }}{% endblock %}
+{% block og_type %}product{% endblock %}
+
+{% block head_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name }}",
+  "image": "{{ product.image_url }}",
+  "description": "{{ product.description }}",
+  "sku": "{{ product._id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "Lite Silky Dessert"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ url_for('product_detail', id=product._id, _external=True) }}",
+    "priceCurrency": "IDR",
+    "price": "{{ product.price }}",
+    "availability": "https://schema.org/InStock",
+    "itemCondition": "https://schema.org/NewCondition"
+  },
+  {% if reviews %}
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ average_rating | round(1) }}",
+    "reviewCount": "{{ reviews | length }}"
+  }
+  {% endif %}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-muted uk-padding-large">
+    <div class="uk-container">
+        <div class="uk-grid-large uk-grid-match" uk-grid>
+            <div class="uk-width-1-2@m uk-animation-slide-left">
+                <div class="uk-card uk-card-default uk-card-body">
+                    <img src="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}"
+                         alt="{{ product.name }}" class="uk-width-1-1 uk-border-rounded">
+                </div>
+            </div>
+            <div class="uk-width-1-2@m uk-animation-slide-right">
+                <h1 class="uk-h1">{{ product.name }}</h1>
+                <p class="uk-text-meta">{{ product.category }}</p>
+                <p class="uk-text-bold uk-text-large uk-text-primary">Rp {{ "{:,.0f}".format(product.price) }}</p>
+                <hr>
+                <h2 class="uk-h3">Deskripsi Produk:</h2>
+                <p>{{ product.description }}</p>
+
+                <div class="uk-margin-medium-top">
+                    <button class="uk-button uk-button-primary uk-button-large add-to-cart-btn"
+                            data-id="{{ product._id }}"
+                            data-name="{{ product.name }}"
+                            data-price="{{ product.price }}"
+                            data-image="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}" style="margin-bottom: 1rem;">
+                        <span uk-icon="cart" style="color: #fff;"></span> Tambah ke Keranjang
+                    </button>
+                    <a href="{{ url_for('products') }}" class="uk-button uk-button-default uk-button-large uk-margin-small-left" style="margin-bottom: 1rem;">
+                        <span uk-icon="arrow-left"></span> Kembali ke Produk
+                    </a>
+
+                    <h2 class="uk-h2 uk-margin-medium-top">Ulasan Pelanggan</h2>
+
+        {# Formulir untuk Menambah Ulasan Baru #}
+        <div class="uk-card uk-card-default uk-card-body uk-margin-medium-bottom">
+            <h3 class="uk-card-title uk-margin-small-bottom">Berikan Ulasan Anda</h3>
+            <form action="{{ url_for('add_review', id=product._id) }}" method="POST">
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="reviewer_name">Nama Anda</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="reviewer_name" name="reviewer_name" type="text" placeholder="Masukkan nama Anda" required>
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="rating">Rating (1-5 Bintang)</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id="rating" name="rating" required>
+                            <option value="">Pilih Rating</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Sangat Baik</option>
+                            <option value="4">⭐⭐⭐⭐ Bagus</option>
+                            <option value="3">⭐⭐⭐ Cukup Baik</option>
+                            <option value="2">⭐⭐ Buruk</option>
+                            <option value="1">⭐ Sangat Buruk</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="comment">Komentar Anda</label>
+                    <div class="uk-form-controls">
+                        <textarea class="uk-textarea" id="comment" name="comment" rows="5" placeholder="Tulis komentar Anda di sini..." required></textarea>
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <button class="uk-button uk-button-primary" type="submit">Kirim Ulasan</button>
+                </div>
+            </form>
+        </div>
+
+        {# Menampilkan Ulasan yang Sudah Ada #}
+        {% if reviews %}
+            <ul class="uk-comment-list">
+            {% for review in reviews %}
+                <li>
+                    <article class="uk-comment uk-card uk-card-default uk-card-body uk-margin-small-bottom">
+                        <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                            <div class="uk-width-expand">
+                                <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{ review.reviewer_name }}</a></h4>
+                                <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                                    <li><a href="#">
+                                        {% for i in range(5) %}
+                                            {% if i < review.rating %}
+                                            <span uk-icon="icon: star; ratio: 0.8" class="uk-text-warning"></span>
+                                            {% else %}
+                                            <span uk-icon="icon: star; ratio: 0.8" class="uk-text-muted"></span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </a></li>
+                                    <li><a href="#">{{ review.date_posted.strftime('%d %b %Y') }}</a></li>
+                                </ul>
+                            </div>
+                        </header>
+                        <div class="uk-comment-body">
+                            <p>{{ review.comment }}</p>
+                        </div>
+                    </article>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="uk-text-muted">Belum ada ulasan untuk produk ini.</p>
+        {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

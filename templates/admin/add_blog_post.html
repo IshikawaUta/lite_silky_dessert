@@ -1,0 +1,41 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Tambah Postingan Blog - Admin{% endblock %}
+{% block page_title %}Tambah Postingan Blog Baru{% endblock %}
+
+{% block admin_content %}
+<div class="uk-card uk-card-default uk-card-body uk-animation-slide-bottom" style="margin-left: 2rem;">
+    <form action="{{ url_for('add_blog_post') }}" method="POST" enctype="multipart/form-data">
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-title">Judul Postingan</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="form-title" type="text" name="title" placeholder="Masukkan judul blog" required>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-author">Penulis (Opsional)</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="form-author" type="text" name="author" value="{{ current_user.username if current_user.is_authenticated else '' }}" placeholder="Nama penulis">
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-image">Gambar Utama (Opsional)</label>
+            <div uk-form-custom="target: true">
+                <input type="file" name="image" accept="image/*">
+                <input class="uk-input uk-form-width-medium" type="text" placeholder="Pilih file gambar..." disabled>
+            </div>
+            <p class="uk-text-meta">Format: JPG, PNG, GIF.</p>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-content">Konten Blog</label>
+            <div class="uk-form-controls">
+                <textarea class="uk-textarea" id="form-content" name="content" rows="15" placeholder="Tulis konten blog Anda di sini..." required></textarea>
+            </div>
+        </div>
+        <div class="uk-margin uk-text-right">
+            <button class="uk-button uk-button-primary" type="submit">Tambah Postingan</button>
+            <a href="{{ url_for('manage_blog') }}" class="uk-button uk-button-default uk-margin-small-left">Batal</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

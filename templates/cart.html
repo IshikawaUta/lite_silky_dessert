@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Keranjang Belanja{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-muted uk-padding-large">
+    <div class="uk-container">
+        <h1 class="uk-text-center uk-animation-slide-bottom">Keranjang Belanja Anda</h1>
+        <hr class="uk-divider-small">
+
+        <div id="cart-items" class="uk-grid-small uk-child-width-1-1" style="padding-left: 2.5rem;" uk-grid>
+            </div>
+
+        <div class="uk-card uk-card-default uk-card-body uk-margin-top uk-text-center uk-animation-fade">
+            <h2 class="uk-card-title">Total: <span id="cart-total">Rp 0</span></h2>
+            <button class="uk-button uk-button-primary uk-margin-small-top" onclick="checkoutViaWhatsApp()">
+                <span uk-icon="whatsapp" style="color: #fff;"></span> Checkout via WhatsApp
+            </button>
+            <button class="uk-button uk-button-danger uk-margin-small-top uk-margin-small-left" onclick="clearCart()">
+                Bersihkan Keranjang
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', loadCart);
+
+    function loadCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItemsContainer = document.getElementById('cart-items');
+        let total = 0;
+        cartItemsContainer.innerHTML = ''; // Clear previous items
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p class="uk-text-center uk-text-lead uk-margin-large-top" style="padding-right: 2.5rem;">Keranjang Anda kosong. Yuk, <a href="{{ url_for('products') }}">mulai belanja</a>!</p>';
+            document.getElementById('cart-total').innerText = 'Rp 0';
+            updateCartCount();
+            return;
+        }
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+
+            const itemHtml = `
+                <div class="uk-card uk-card-default uk-card-body uk-grid-small uk-flex-middle uk-margin-small-bottom uk-animation-slide-left" uk-grid>
+                    <div class="uk-width-auto">
+                        <img src="${item.image}" alt="${item.name}" width="80" height="80" class="uk-border-rounded uk-cover">
+                    </div>
+                    <div class="uk-width-expand">
+                        <h3 class="uk-card-title uk-margin-remove-bottom">${item.name}</h3>
+                        <p class="uk-text-meta uk-margin-remove-top">Harga: Rp ${item.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div class="uk-width-auto uk-text-right">
+                        <div class="uk-button-group">
+                            <button class="uk-button uk-button-small uk-button-default" style="margin-right: 1rem;" onclick="updateQuantity('${item.id}', -1)">-</button>
+                            <span class="uk-button uk-button-small uk-button-text">${item.quantity}</span>
+                            <button class="uk-button uk-button-small uk-button-default" style="margin-left: 1rem;" onclick="updateQuantity('${item.id}', 1)">+</button>
+                        </div>
+                        <p class="uk-text-bold uk-margin-small-top">Subtotal: Rp ${itemTotal.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div class="uk-width-auto">
+                        <button class="uk-button uk-button-small uk-button-danger" onclick="removeFromCart('${item.id}')"><span uk-icon="trash" style="color: #fff;"></span></button>
+                    </div>
+                </div>
+            `;
+            cartItemsContainer.insertAdjacentHTML('beforeend', itemHtml);
+        });
+
+        document.getElementById('cart-total').innerText = 'Rp ' + total.toLocaleString('id-ID');
+        updateCartCount(); // Update cart count in navbar
+    }
+
+    function updateQuantity(productId, change) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const itemIndex = cart.findIndex(item => item.id === productId);
+
+        if (itemIndex > -1) {
+            cart[itemIndex].quantity += change;
+            if (cart[itemIndex].quantity <= 0) {
+                cart.splice(itemIndex, 1); // Remove if quantity is 0 or less
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart(); // Reload cart to update UI
+        }
+    }
+
+    function removeFromCart(productId) {
+        UIkit.modal.confirm('Anda yakin ingin menghapus produk ini dari keranjang?').then(function () {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+            UIkit.notification({
+                message: 'Produk dihapus dari keranjang!',
+                status: 'warning',
+                pos: 'top-right'
+            });
+        }, function () {
+            // Do nothing if canceled
+        });
+    }
+
+    function clearCart() {
+        UIkit.modal.confirm('Anda yakin ingin mengosongkan seluruh keranjang?').then(function () {
+            localStorage.removeItem('cart');
+            loadCart();
+            UIkit.notification({
+                message: 'Keranjang dikosongkan!',
+                status: 'danger',
+                pos: 'top-right'
+            });
+        }, function () {
+            // Do nothing if canceled
+        });
+    }
+
+    function checkoutViaWhatsApp() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
+            UIkit.notification({
+                message: 'Keranjang Anda kosong, tidak ada yang bisa di-checkout.',
+                status: 'danger',
+                pos: 'top-center'
+            });
+            return;
+        }
+
+        let message = "*Halo Lite Dessert, saya ingin memesan dessert berikut:*\n\n";
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            message += `${index + 1}. *${item.name}* (${item.quantity}x) - Rp ${item.price.toLocaleString('id-ID')}\n`;
+            total += item.price * item.quantity;
+        });
+
+        message += `\n*Total Harga: Rp ${total.toLocaleString('id-ID')}*\n`;
+        message += "\n_Mohon konfirmasi pesanan saya. Terima kasih!_";
+
+        const phoneNumber = "+628119967877"; // Ganti dengan nomor WhatsApp Anda
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+
+        UIkit.notification({
+            message: 'Anda akan diarahkan ke WhatsApp untuk menyelesaikan pesanan. Keranjang akan dikosongkan.',
+            status: 'primary',
+            pos: 'top-center',
+            timeout: 3000
+        });
+
+        // Clear cart after a short delay to allow WhatsApp link to open
+        setTimeout(() => {
+            clearCart();
+        }, 1000); // Clear after 1 second
+    }
+</script>
+{% endblock %}

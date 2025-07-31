@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - Lite Silky Dessert Blog{% endblock %}
+{% block meta_description %}{{ post.content | truncate(150) }}{% endblock %}
+
+{% block og_title %}{{ post.title }} | Lite Silky Dessert Blog{% endblock %}
+{% block og_description %}{{ post.content | truncate(150) }}{% endblock %}
+{% block og_url %}{{ url_for('blog_post', id=post._id, _external=True) }}{% endblock %}
+{% block og_image %}{{ post.image_url }}{% endblock %}
+{% block og_type %}article{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-muted uk-padding-large">
+    <div class="uk-container uk-width-2-3@m">
+        <article class="uk-article uk-card uk-card-default uk-card-body uk-animation-slide-bottom">
+            <h1 class="uk-article-title uk-text-center">{{ post.title }}</h1>
+            <p class="uk-article-meta uk-text-center">Ditulis oleh {{ post.author }} pada {{ post.date_posted.strftime('%d %b %Y') }}</p>
+
+            {% if post.image_url %}
+            <div class="uk-text-center uk-margin-medium-bottom">
+                <img src="{{ post.image_url }}" alt="{{ post.title }}" class="uk-border-rounded uk-width-1-1" style="max-height: 400px; object-fit: cover;">
+            </div>
+            {% endif %}
+
+            <div class="uk-article-body uk-margin-large-top">
+                {{ post.content | safe }} {# Use |safe to render HTML content from CKEditor #}
+            </div>
+
+            <hr class="uk-margin-large">
+
+            <div class="uk-text-center">
+                <a href="{{ url_for('blog') }}" class="uk-button uk-button-default">
+                    <span uk-icon="arrow-left"></span> Kembali ke Blog
+                </a>
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}

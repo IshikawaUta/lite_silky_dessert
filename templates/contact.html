@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Kontak Kami - Lite Silky Dessert{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-muted uk-padding-large">
+    <div class="uk-container">
+        <h1 class="uk-h1 uk-text-center uk-margin-large-bottom uk-animation-slide-bottom">Hubungi Kami</h1>
+
+        <div class="uk-grid-large uk-grid-match uk-child-width-1-2@m" uk-grid>
+            <div class="uk-animation-slide-left">
+                <div class="uk-card uk-card-default uk-card-body">
+                    <h2 class="uk-card-title">Kirim Pesan</h2>
+                    <form action="{{ url_for('contact') }}" method="POST">
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-name">Nama Lengkap</label>
+                            <div class="uk-form-controls">
+                                <input class="uk-input" id="form-name" type="text" name="name" placeholder="Nama Anda" required>
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-email">Email</label>
+                            <div class="uk-form-controls">
+                                <input class="uk-input" id="form-email" type="email" name="email" placeholder="email@contoh.com" required>
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-message">Pesan Anda</label>
+                            <div class="uk-form-controls">
+                                <textarea class="uk-textarea" id="form-message" name="message" rows="5" placeholder="Tulis pesan Anda di sini..." required></textarea>
+                            </div>
+                        </div>
+                        <div class="uk-margin uk-text-right">
+                            <button class="uk-button uk-button-primary" type="submit">Kirim Pesan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="uk-animation-slide-right">
+                <div class="uk-card uk-card-default uk-card-body">
+                    <h2 class="uk-card-title">Informasi Kontak Lainnya</h2>
+                    <ul class="uk-list uk-list-large">
+                        <li><span uk-icon="icon: location; ratio: 1.2"></span>
+                            <p class="uk-margin-remove-top">Kelapa Dua, Tangerang Selatan</p>
+                        </li>
+                        <li><span uk-icon="icon: mail; ratio: 1.2"></span>
+                            <p class="uk-margin-remove-top"><a href="mailto:litedessertdrink@gmail.com">info@LiteSilkyDessert.com</a></p>
+                        </li>
+                        <li><span uk-icon="icon: phone; ratio: 1.2"></span>
+                            <p class="uk-margin-remove-top"><a href="https://wa.me/+628119967877">+628119967877</a></p>
+                        </li>
+                        <li><span uk-icon="icon: instagram; ratio: 1.2"></span>
+                            <p class="uk-margin-remove-top"><a href="https://www.instagram.com/lite_dessert/" target="_blank">@lite_dessert</a></p>
+                        </li>
+                    </ul>
+                    <div class="uk-margin-top">
+                        <h3 class="uk-card-title">Jam Operasional</h3>
+                        <ul class="uk-list">
+                            <li>Senin - Jumat: 09:00 - 18:00 WIB</li>
+                            <li>Sabtu: 10:00 - 17:00 WIB</li>
+                            <li>Minggu: Tutup</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

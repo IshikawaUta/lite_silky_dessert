@@ -1,0 +1,50 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Edit Postingan Blog - Admin{% endblock %}
+{% block page_title %}Edit Postingan Blog{% endblock %}
+
+{% block admin_content %}
+<div class="uk-card uk-card-default uk-card-body uk-animation-slide-bottom" style="margin-left: 2rem;">
+    <form action="{{ url_for('edit_blog_post', id=post._id) }}" method="POST" enctype="multipart/form-data">
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-title">Judul Postingan</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="form-title" type="text" name="title" value="{{ post.title }}" required>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-author">Penulis</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="form-author" type="text" name="author" value="{{ post.author }}" readonly>
+            </div>
+            <p class="uk-text-meta">Penulis tidak bisa diubah setelah postingan dibuat.</p>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-image">Gambar Utama Saat Ini</label>
+            {% if post.image_url %}
+            <div class="uk-margin-small-bottom">
+                <img src="{{ post.image_url }}" alt="Gambar Postingan" width="150" class="uk-border-rounded">
+            </div>
+            {% else %}
+            <p>Tidak ada gambar saat ini.</p>
+            {% endif %}
+            <label class="uk-form-label" for="form-new-image">Unggah Gambar Baru (Opsional)</label>
+            <div uk-form-custom="target: true">
+                <input type="file" name="image" accept="image/*">
+                <input class="uk-input uk-form-width-medium" type="text" placeholder="Pilih file gambar..." disabled>
+            </div>
+            <p class="uk-text-meta">Biarkan kosong jika tidak ingin mengubah gambar.</p>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-content">Konten Blog</label>
+            <div class="uk-form-controls">
+                <textarea class="uk-textarea" id="form-content" name="content" rows="15" required>{{ post.content }}</textarea>
+            </div>
+        </div>
+        <div class="uk-margin uk-text-right">
+            <button class="uk-button uk-button-primary" type="submit">Perbarui Postingan</button>
+            <a href="{{ url_for('manage_blog') }}" class="uk-button uk-button-default uk-margin-small-left">Batal</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div uk-grid>
+        <div class="uk-width-auto@m uk-background-primary uk-light uk-padding-small" style="min-height: 100vh;min-width: 60vh;">
+            <a class="uk-logo uk-display-block uk-margin-bottom uk-text-center" href="{{ url_for('admin_dashboard') }}">
+                Admin Panel
+            </a>
+            <ul class="uk-nav-default uk-nav-parent-icon" uk-nav>
+                <li class="uk-active"><a href="{{ url_for('admin_dashboard') }}"><span class="uk-margin-small-right" uk-icon="home"></span> Dashboard</a></li>
+                <li class="uk-nav-header" style="padding-left: 2rem;">Manajemen</li>
+                <li><a href="{{ url_for('manage_products') }}"><span class="uk-margin-small-right" uk-icon="thumbnails"></span> Produk</a></li>
+                <li><a href="{{ url_for('manage_blog') }}"><span class="uk-margin-small-right" uk-icon="file-text"></span> Blog</a></li>
+                {# Add more admin menu items here, e.g., Orders, Users #}
+                <li class="uk-nav-divider"></li>
+                <li><a href="{{ url_for('admin_logout') }}"><span class="uk-margin-small-right" uk-icon="sign-out"></span> Logout</a></li>
+                <li><a href="{{ url_for('index') }}"><span class="uk-margin-small-right" uk-icon="world"></span> Lihat Situs</a></li>
+            </ul>
+        </div>
+
+        <div class="uk-width-expand@m uk-padding">
+            <h1 class="uk-heading-medium">{% block page_title %}Dashboard{% endblock %}</h1>
+            <hr>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="uk-container uk-margin-top">
+                        {% for category, message in messages %}
+                        <div class="uk-alert-{{ category }}" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>{{ message }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block admin_content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/uikit.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/uikit-icons.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

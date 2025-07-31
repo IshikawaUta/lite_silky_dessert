@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Produk Kami - Lite Silky Dessert{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-muted uk-padding-large">
+    <div class="uk-container">
+        <h1 class="uk-h1 uk-text-center uk-margin-large-bottom uk-animation-slide-bottom">Semua Produk Dessert</h1>
+
+        <div class="uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match" uk-grid>
+            {% for product in products %}
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-animation-fade">
+                    <div class="uk-card-media-top uk-cover-container" style="height: 200px;">
+                        <a href="{{ url_for('product_detail', id=product._id) }}">
+                            <img src="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}"
+                                 alt="{{ product.name }}" uk-cover>
+                            <canvas width="600" height="400"></canvas>
+                        </a>
+                    </div>
+                    <div class="uk-card-body uk-text-center">
+                        <h3 class="uk-card-title uk-margin-remove-bottom">{{ product.name }}</h3>
+                        <p class="uk-text-meta uk-margin-small-top">{{ product.category }}</p>
+                        <p class="uk-text-bold uk-text-large">Rp {{ "{:,.0f}".format(product.price) }}</p>
+                        <button class="uk-button uk-button-primary uk-margin-top add-to-cart-btn"
+                                data-id="{{ product._id }}"
+                                data-name="{{ product.name }}"
+                                data-price="{{ product.price }}"
+                                data-image="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}">
+                            <span uk-icon="cart" style="color: #fff;"></span> Tambah ke Keranjang
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="uk-width-1-1 uk-text-center uk-text-lead uk-margin-large-top">Tidak ada produk yang tersedia saat ini. Silakan cek lagi nanti!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

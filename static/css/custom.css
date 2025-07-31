@@ -1,0 +1,199 @@
+/* General Body and Font Styles */
+body {
+    font-family: 'Lato', sans-serif;
+    color: #4A4A4A; /* Soft dark grey for body text */
+    background-color: #FDF9F3; /* Light cream background */
+}
+
+/* Headings and Logo Styles */
+h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
+    font-family: 'Amatic SC', cursive;
+    color: #C06C84; /* Soft rose/mauve for headings */
+    font-weight: 700;
+}
+
+.uk-logo {
+    font-size: 2.8em; /* Larger logo for impact */
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Navbar Styles */
+.uk-navbar-container {
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly opaque white */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    backdrop-filter: blur(5px); /* Modern blur effect */
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.uk-navbar-nav > li > a {
+    color: #C06C84; /* Matching heading color for nav links */
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+.uk-navbar-nav > li > a:hover {
+    color: #F6AA96; /* Warm peach on hover */
+    text-decoration: none;
+}
+
+.uk-navbar-item.uk-logo {
+    padding-left: 20px;
+}
+
+/* Button Styles */
+.uk-button-primary {
+    background-color: #C06C84;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.uk-button-primary:hover, .uk-button-primary:focus {
+    background-color: #F6AA96;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.uk-button-secondary {
+    background-color: #8D6B92; /* Elegant purple */
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.uk-button-secondary:hover, .uk-button-secondary:focus {
+    background-color: #A38DA6; /* Lighter purple on hover */
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.uk-button-default {
+    border-color: #C06C84;
+    color: #C06C84;
+    transition: all 0.3s ease;
+}
+
+.uk-button-default:hover {
+    background-color: #FDF9F3;
+    border-color: #F6AA96;
+    color: #F6AA96;
+}
+
+/* Card Styles */
+.uk-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.uk-card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.uk-card-media-top img {
+    height: 200px; /* Fixed height for product/blog images */
+    object-fit: cover;
+    width: 100%;
+}
+
+/* Icon Styling */
+[uk-icon] {
+    color: #C06C84; /* Default icon color */
+}
+
+.uk-icon-button {
+    background-color: #C06C84;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.uk-icon-button:hover {
+    background-color: #F6AA96;
+}
+
+/* Footer Styles */
+.uk-section-secondary {
+    background-color: #8D6B92; /* Deep purple for footer */
+    color: #fff;
+}
+
+/* Hero Section Specifics */
+.uk-section-cover {
+    position: relative;
+    background-blend-mode: multiply; /* Make background image subtle */
+    background-color: rgba(192, 108, 132, 0.4); /* Overlay color */
+}
+
+.uk-heading-xlarge {
+    font-size: 4.5em; /* Larger heading */
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.uk-text-lead {
+    color: rgba(255,255,255,0.9);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Animations (UIkit classes used in HTML, but can be customized here) */
+.uk-animation-fade {
+    animation-fill-mode: both;
+}
+
+/* Forms */
+.uk-input, .uk-textarea, .uk-select {
+    border-color: #D3BCC0; /* Soft border color */
+}
+
+.uk-input:focus, .uk-textarea:focus, .uk-select:focus {
+    border-color: #C06C84;
+    box-shadow: 0 0 0 2px rgba(192, 108, 132, 0.2);
+}
+
+/* Alerts/Flash messages */
+.uk-alert-success {
+    background-color: #e6ffe6;
+    color: #3c763d;
+    border-left: 5px solid #5cb85c;
+}
+
+.uk-alert-danger {
+    background-color: #ffe6e6;
+    color: #a94442;
+    border-left: 5px solid #d9534f;
+}
+
+.uk-alert-warning {
+    background-color: #fff8e6;
+    color: #8a6d3b;
+    border-left: 5px solid #f0ad4e;
+}
+
+.uk-alert-info {
+    background-color: #e6f7ff;
+    color: #31708f;
+    border-left: 5px solid #5bc0de;
+}
+
+/* Admin Specific Styles (if any, though admin_base.html handles most) */
+.uk-background-primary {
+    background-color: #8D6B92 !important; /* Admin sidebar color */
+}
+.uk-nav-default > li.uk-active > a {
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+.uk-nav-default > li > a {
+    color: rgba(255,255,255,0.8);
+}
+.uk-nav-default > li > a:hover {
+    color: #fff;
+    background-color: rgba(255,255,255,0.05);
+}

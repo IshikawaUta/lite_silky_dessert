@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body class="uk-background-muted uk-flex uk-flex-center uk-flex-middle uk-height-viewport">
+    <div class="uk-card uk-card-default uk-card-body uk-width-large uk-text-center uk-animation-slide-bottom">
+        <h2 class="uk-card-title uk-margin-bottom">Admin Login</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="uk-alert-{{ category }}" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>{{ message }}</p>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('admin_login') }}" method="POST">
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon" uk-icon="icon: user"></span>
+                    <input class="uk-input" type="text" name="username" placeholder="Username" required>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                    <input class="uk-input" type="password" name="password" placeholder="Password" required>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <button class="uk-button uk-button-primary uk-width-1-1" type="submit">Login</button>
+            </div>
+        </form>
+        <p class="uk-text-small uk-margin-top">
+            <a href="{{ url_for('index') }}" class="uk-button uk-button-text">Kembali ke Beranda</a>
+        </p>
+    </div>
+    <script src="{{ url_for('static', filename='js/uikit.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/uikit-icons.min.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lite Silky Dessert | Ceriakan Harimu | rasakan sensasi manisnya di setiap gigitan{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Nikmati kelezatan Dessert manis dari Lite Silky Dessert. Pesan online sekarang dan rasakan sensasi manisnya di setiap gigitan yang membuat Harimu ceria.{% endblock %}">
+    <meta property="og:site_name" content="Lite Silky Dessert">
+    <meta property="og:title" content="{% block og_title %}Lite Silky Dessert | Ceriakan Harimu | rasakan sensasi manisnya di setiap gigitan{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Nikmati kelezatan Dessert manis dari Lite Silky Dessert. Pesan online sekarang dan rasakan sensasi manisnya di setiap gigitan yang membuat Harimu ceria.{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ request.base_url }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/default_og_image.png', _external=True) }}{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    {% block head_extra %}{% endblock %}
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="uk-navbar-container uk-navbar-transparent uk-dark" uk-navbar="offset: 50">
+        <div class="uk-navbar-left">
+            <a class="uk-navbar-item uk-logo" href="{{ url_for('index') }}">Lite Silky Dessert</a>
+        </div>
+        <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li><a href="{{ url_for('index') }}">Beranda</a></li>
+                <li><a href="{{ url_for('products') }}">Produk</a></li>
+                <li><a href="{{ url_for('blog') }}">Blog</a></li>
+                <li><a href="{{ url_for('about') }}">Tentang Kami</a></li>
+                <li><a href="{{ url_for('contact') }}">Kontak</a></li>
+                <li>
+                    <a href="#">
+                        <span uk-icon="search"></span> Pencarian
+                    </a>
+                    <div class="uk-navbar-dropdown" uk-dropdown="mode: click; offset: 0">
+                        <div class="uk-width-large">
+                            {# --- Tambahkan Formulir Pencarian di Sini --- #}
+                            <form class="uk-search uk-search-navbar uk-width-1-1" action="{{ url_for('search') }}" method="GET">
+                                <span uk-search-icon></span>
+                                <input class="uk-search-input" type="search" placeholder="Cari produk atau blog..." aria-label="Search" name="query">
+                            </form>
+                            {# --- Akhir Formulir Pencarian --- #}
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="{{ url_for('cart') }}">
+                        <span uk-icon="cart"></span> Keranjang
+                        (<span id="cart-count" class="uk-badge">0</span>)
+                    </a>
+                </li>
+            </ul>
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas-nav" uk-toggle><span uk-navbar-toggle-icon></span> <span class="uk-margin-small-left" style="padding-right: 1rem;">Menu</span></a>
+        </div>
+    </nav>
+
+    <div id="offcanvas-nav" uk-offcanvas="overlay: true">
+        <div class="uk-offcanvas-bar">
+            <ul class="uk-nav uk-nav-default">
+                <li class="uk-nav-header">Navigasi</li>
+                <li><a href="{{ url_for('index') }}">Beranda</a></li>
+                <li><a href="{{ url_for('products') }}">Produk</a></li>
+                <li><a href="{{ url_for('blog') }}">Blog</a></li>
+                <li><a href="{{ url_for('about') }}">Tentang Kami</a></li>
+                <li><a href="{{ url_for('contact') }}">Kontak</a></li>
+                 <li>
+                    <a href="#search-overlay" uk-toggle="animation: uk-animation-fade; target: #search-overlay">
+                        <span uk-icon="search"></span> Pencarian
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('cart') }}">
+                        <span uk-icon="cart"></span> Keranjang
+                        (<span id="cart-count-offcanvas" class="uk-badge">0</span>)
+                    </a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="uk-nav-divider"></li>
+                <li class="uk-nav-header">Admin</li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Dashboard Admin</a></li>
+                <li><a href="{{ url_for('admin_logout') }}">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div id="search-overlay" class="uk-modal-full" uk-modal>
+        <div class="uk-modal-dialog uk-flex uk-flex-center uk-flex-middle uk-height-viewport" style="min-height: 10rem; padding: 1rem 1rem;">
+            <button class="uk-modal-close-full" type="button" uk-close></button>
+            <form class="uk-search uk-width-1-2@s" style="border: 1px solid #000000;" action="{{ url_for('search') }}" method="GET">
+                <span uk-search-icon style="padding-left: 1.5rem;"></span>
+                <input class="uk-search-input uk-text-center" style="font-size: 1.5rem;" type="search" placeholder="Cari produk atau blog..." autofocus name="query">
+            </form>
+        </div>
+    </div>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="uk-container uk-margin-top">
+                    {% for category, message in messages %}
+                    <div class="uk-alert-{{ category }}" uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <p>{{ message }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="uk-section uk-section-secondary uk-light uk-text-center">
+        <div class="uk-container">
+            <p>&copy; {{ datetime.now().year }} Lite Silky Dessert. All rights reserved.</p>
+            <div class="uk-margin-small-top">
+                <a href="#" class="uk-icon-button uk-margin-small-right" uk-icon="facebook"></a>
+                <a href="https://www.instagram.com/lite_dessert/" class="uk-icon-button uk-margin-small-right" uk-icon="instagram"></a>
+                <a href="#" class="uk-icon-button" uk-icon="twitter"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/uikit.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/uikit-icons.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>

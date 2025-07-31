@@ -1,0 +1,47 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Tambah Produk - Admin{% endblock %}
+{% block page_title %}Tambah Produk Baru{% endblock %}
+
+{% block admin_content %}
+<div class="uk-card uk-card-default uk-card-body uk-animation-slide-bottom" style="margin-left: 2rem;">
+    <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-name">Nama Produk</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="form-name" type="text" name="name" placeholder="Masukkan nama produk" required>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-description">Deskripsi</label>
+            <div class="uk-form-controls">
+                <textarea class="uk-textarea" id="form-description" name="description" rows="5" placeholder="Deskripsi lengkap produk" required></textarea>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-price">Harga (Rp)</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="form-price" type="number" step="0.01" name="price" placeholder="Contoh: 50000.00" required min="0">
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-category">Kategori</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="form-category" type="text" name="category" placeholder="Contoh: Kue, Cupcake, Cookies" required>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="form-image">Gambar Produk</label>
+            <div uk-form-custom="target: true">
+                <input type="file" name="image" required accept="image/*">
+                <input class="uk-input uk-form-width-medium" type="text" placeholder="Pilih file gambar..." disabled>
+            </div>
+            <p class="uk-text-meta">Format: JPG, PNG, GIF. Ukuran maksimum: 5MB (disarankan).</p>
+        </div>
+        <div class="uk-margin uk-text-right">
+            <button class="uk-button uk-button-primary" type="submit">Tambah Produk</button>
+            <a href="{{ url_for('manage_products') }}" class="uk-button uk-button-default uk-margin-small-left">Batal</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

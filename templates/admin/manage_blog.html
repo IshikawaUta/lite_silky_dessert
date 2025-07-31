@@ -1,0 +1,42 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Kelola Blog - Admin{% endblock %}
+{% block page_title %}Kelola Blog{% endblock %} {# This is correct, it's a separate block #}
+
+{% block admin_content %}
+<div class="uk-margin" style="padding-left: 2rem;">
+    <a href="{{ url_for('add_blog_post') }}" class="uk-button uk-button-primary"><span uk-icon="plus" style="color: #fff;"></span> Tambah Postingan Baru</a>
+</div>
+
+<div class="uk-overflow-auto" style="padding-left: 2rem;">
+    <table class="uk-table uk-table-hover uk-table-striped uk-table-middle uk-table-responsive">
+        <thead>
+            <tr>
+                <th>Judul</th>
+                <th>Penulis</th>
+                <th>Tanggal Posting</th>
+                <th class="uk-text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr class="uk-animation-slide-bottom">
+                <td>{{ post.title }}</td>
+                <td>{{ post.author }}</td>
+                <td>{{ post.date_posted.strftime('%d %b %Y') }}</td>
+                <td class="uk-text-center">
+                    <a href="{{ url_for('edit_blog_post', id=post._id) }}" class="uk-button uk-button-small uk-button-default uk-margin-small-right">Edit</a>
+                    <form action="{{ url_for('delete_blog_post', id=post._id) }}" method="POST" class="uk-display-inline">
+                        <button type="submit" class="uk-button uk-button-small uk-button-danger" onclick="return confirm('Anda yakin ingin menghapus postingan ini?')">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="uk-text-center uk-text-muted">Belum ada postingan blog.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
