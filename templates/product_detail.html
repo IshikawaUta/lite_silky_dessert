@@ -47,7 +47,7 @@
         <div class="uk-grid-large uk-grid-match" uk-grid>
             <div class="uk-width-1-2@m uk-animation-slide-left">
                 <div class="uk-card uk-card-default uk-card-body">
-                    <img src="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}"
+                    <img src="{{ product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') }}"
                          alt="{{ product.name }}" class="uk-width-1-1 uk-border-rounded">
                 </div>
             </div>
@@ -64,7 +64,7 @@
                             data-id="{{ product._id }}"
                             data-name="{{ product.name }}"
                             data-price="{{ product.price }}"
-                            data-image="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}" style="margin-bottom: 1rem;">
+                            data-image="{{ product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') }}" style="margin-bottom: 1rem;">
                         <span uk-icon="cart" style="color: #fff;"></span> Tambah ke Keranjang
                     </button>
                     <a href="{{ url_for('products') }}" class="uk-button uk-button-default uk-button-large uk-margin-small-left" style="margin-bottom: 1rem;">
