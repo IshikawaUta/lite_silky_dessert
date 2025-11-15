@@ -8,7 +8,7 @@ body {
 /* Headings and Logo Styles */
 h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
     font-family: 'Amatic SC', cursive;
-    color: #C06C84; /* Soft rose/mauve for headings */
+    color: #B0E0E6; /* Soft rose/mauve for headings */
     font-weight: 700;
 }
 
@@ -28,14 +28,14 @@ h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
 }
 
 .uk-navbar-nav > li > a {
-    color: #C06C84; /* Matching heading color for nav links */
+    color: #B0E0E6; /* Matching heading color for nav links */
     font-weight: bold;
     font-size: 1.1em;
     transition: color 0.3s ease;
 }
 
 .uk-navbar-nav > li > a:hover {
-    color: #F6AA96; /* Warm peach on hover */
+    color: #b0e0e6e1; /* Warm peach on hover */
     text-decoration: none;
 }
 
@@ -45,20 +45,20 @@ h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
 
 /* Button Styles */
 .uk-button-primary {
-    background-color: #C06C84;
+    background-color: #B0E0E6;
     color: #fff;
     border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .uk-button-primary:hover, .uk-button-primary:focus {
-    background-color: #F6AA96;
+    background-color: #B0E0E6;
     color: #fff;
     transform: translateY(-2px);
 }
 
 .uk-button-secondary {
-    background-color: #8D6B92; /* Elegant purple */
+    background-color: #B0E0E6; /* Elegant purple */
     color: #fff;
     border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -71,8 +71,8 @@ h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
 }
 
 .uk-button-default {
-    border-color: #C06C84;
-    color: #C06C84;
+    border-color: #B0E0E6;
+    color: #B0E0E6;
     transition: all 0.3s ease;
 }
 
@@ -103,30 +103,30 @@ h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
 
 /* Icon Styling */
 [uk-icon] {
-    color: #C06C84; /* Default icon color */
+    color: #B0E0E6; /* Default icon color */
 }
 
 .uk-icon-button {
-    background-color: #C06C84;
-    color: #fff;
+    background-color: #fff !important;
+    color: #B0E0E6 !important;
     transition: background-color 0.3s ease;
 }
 
 .uk-icon-button:hover {
-    background-color: #F6AA96;
+    background-color: #B0E0E6;
 }
 
 /* Footer Styles */
 .uk-section-secondary {
-    background-color: #8D6B92; /* Deep purple for footer */
-    color: #fff;
+    background-color: #B0E0E6; /* Deep purple for footer */
+    color: #fff !important;
 }
 
 /* Hero Section Specifics */
 .uk-section-cover {
     position: relative;
     background-blend-mode: multiply; /* Make background image subtle */
-    background-color: rgba(192, 108, 132, 0.4); /* Overlay color */
+    background-color: rgba(255, 255, 255, 0.4); /* Overlay color */
 }
 
 .uk-heading-xlarge {
@@ -153,7 +153,7 @@ h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
 }
 
 .uk-input:focus, .uk-textarea:focus, .uk-select:focus {
-    border-color: #C06C84;
+    border-color: #B0E0E6;
     box-shadow: 0 0 0 2px rgba(192, 108, 132, 0.2);
 }
 
@@ -184,7 +184,7 @@ h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
 
 /* Admin Specific Styles (if any, though admin_base.html handles most) */
 .uk-background-primary {
-    background-color: #8D6B92 !important; /* Admin sidebar color */
+    background-color: #B0E0E6 !important; /* Admin sidebar color */
 }
 .uk-nav-default > li.uk-active > a {
     background-color: rgba(255,255,255,0.1);
