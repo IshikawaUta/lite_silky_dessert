@@ -65,7 +65,7 @@ h1, h2, h3, h4, h5, h6, .uk-logo, .uk-card-title {
 }
 
 .uk-button-secondary:hover, .uk-button-secondary:focus {
-    background-color: #A38DA6; /* Lighter purple on hover */
+    background-color: #B0E0E6; /* Lighter purple on hover */
     color: #fff;
     transform: translateY(-2px);
 }
