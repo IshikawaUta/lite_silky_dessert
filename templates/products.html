@@ -26,7 +26,8 @@
                                 data-id="{{ product._id }}"
                                 data-name="{{ product.name }}"
                                 data-price="{{ product.price }}"
-                                data-image="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}">
+                                data-image="{{ product.image_url if product.image_url else url_for('static', filename='img/placeholder.jpg') }}"
+                                style="color: #fff !important;">
                             <span uk-icon="cart" style="color: #fff;"></span> Tambah ke Keranjang
                         </button>
                     </div>
