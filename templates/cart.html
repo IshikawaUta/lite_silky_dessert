@@ -13,7 +13,7 @@
 
         <div class="uk-card uk-card-default uk-card-body uk-margin-top uk-text-center uk-animation-fade">
             <h2 class="uk-card-title">Total: <span id="cart-total">Rp 0</span></h2>
-            <button class="uk-button uk-button-primary uk-margin-small-top" onclick="checkoutViaWhatsApp()">
+            <button class="uk-button uk-button-primary uk-margin-small-top" onclick="checkoutViaWhatsApp()" style="color: #fff !important;">
                 <span uk-icon="whatsapp" style="color: #fff;"></span> Checkout via WhatsApp
             </button>
             <button class="uk-button uk-button-danger uk-margin-small-top uk-margin-small-left" onclick="clearCart()">
@@ -33,7 +33,7 @@
         cartItemsContainer.innerHTML = ''; // Clear previous items
 
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p class="uk-text-center uk-text-lead uk-margin-large-top" style="padding-right: 2.5rem;">Keranjang Anda kosong. Yuk, <a href="{{ url_for('products') }}">mulai belanja</a>!</p>';
+            cartItemsContainer.innerHTML = '<p class="uk-text-center uk-text-lead uk-margin-large-top" style="padding-right: 2.5rem; color: #000;">Keranjang Anda kosong. Yuk, <a href="{{ url_for('products') }}">mulai belanja</a>!</p>';
             document.getElementById('cart-total').innerText = 'Rp 0';
             updateCartCount();
             return;

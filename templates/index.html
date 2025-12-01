@@ -5,16 +5,20 @@
 
 {% block content %}
 <div class="uk-section uk-section-large uk-section-cover uk-light uk-flex uk-flex-middle"
+<<<<<<< HEAD
      style="background-image: url('https://res.cloudinary.com/dzsqaauqn/image/upload/v1764211822/IMG-20251126-WA0000_s2yr3h.jpg'); background-position: center; background-size: cover; height: 600px;">
+=======
+     style="background-image: url('https://res.cloudinary.com/dzsqaauqn/image/upload/v1764609725/WhatsApp_Image_2025-12-01_at_22.51.32_zylbz6.jpg'); background-position: center; background-size: cover; height: 650px;">
+>>>>>>> 49ddc05 (update)
     <div class="uk-width-1-1">
         <div class="uk-container uk-text-center">
-            <h1 class="uk-heading-xlarge uk-text-shadow uk-animation-slide-bottom" style="font-family: 'Amatic SC', cursive;">Lite Silky Dessert, Ceriakan Harimu</h1>
-            <p class="uk-text-lead uk-text-shadow uk-width-3-4@m uk-margin-auto uk-animation-slide-bottom uk-animation-delay-small" style="color: #fff; font-family: Verdana, Geneva, Tahoma, sans-serif;">
+            <h1 class="uk-heading-xlarge uk-text-shadow uk-animation-slide-bottom" style="font-family: 'Amatic SC', cursive; padding-top: 2rem !important;">Lite Silky Dessert, Ceriakan Harimu</h1>
+            <p class="uk-text-lead uk-text-shadow uk-width-3-4@m uk-margin-auto uk-animation-slide-bottom uk-animation-delay-small" style="color: #000; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: bold;">
                 Dessert homemade terbaik untuk momen spesial Anda.
             </p>
             <div class="uk-margin-medium-top uk-animation-slide-bottom uk-animation-delay-medium">
-                <a href="{{ url_for('products') }}" class="uk-button uk-button-primary uk-button-large" style="margin-bottom: 1rem;">Lihat Produk Kami</a>
-                <a href="{{ url_for('contact') }}" class="uk-button uk-button-default uk-button-large uk-margin-small-left" style="margin-bottom: 1rem;">Hubungi Kami</a>
+                <a href="{{ url_for('products') }}" class="uk-button uk-button-primary uk-button-large" style="margin-bottom: 2rem !important;">Lihat Produk Kami</a>
+                <a href="{{ url_for('contact') }}" class="uk-button uk-button-default uk-button-large uk-margin-small-left" style="margin-bottom: 2rem !important;">Hubungi Kami</a>
             </div>
         </div>
     </div>
@@ -40,8 +44,9 @@
                                 data-id="{{ product._id }}"
                                 data-name="{{ product.name }}"
                                 data-price="{{ product.price }}"
-                                data-image="{{ product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') }}">
-                            <span uk-icon="cart" style="color: #fff;"></span> Tambah ke Keranjang
+                                data-image="{{ product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') }}"
+                                style="color: #fff !important;">
+                            <span uk-icon="cart" style="color: #fff !important;"></span> Tambah ke Keranjang
                         </button>
                     </div>
                 </div>
